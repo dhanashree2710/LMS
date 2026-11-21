@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><title>Sign in · College LMS</title></head><body>
+<section id="login">
+ <div class="art">
+  <i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i>
+  <div class="art-grid"></div>
+  <div class="brand">
+   <svg viewBox="0 0 64 64" fill="none" stroke="#a5b4fc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 4 24l28 14 28-14z"/><path d="M14 31v13c9 8 27 8 36 0V31"/></svg>
+   College LMS
+  </div>
+  <div class="art-body">
+   <div class="art-badge">College Learning Platform</div>
+   <h1>One place for every classroom, result and admission.</h1>
+   <p>Sign in with your role — platform admin, college admin, teacher, student or parent — and open the dashboard built for you.</p>
+   
+   <div class="chips"><span>Attendance</span><span>Assignments</span><span>Quizzes</span><span>Results</span><span>Admissions</span><span>Library</span></div>
+  </div>
+  <div class="art-foot"><small>Secure sign-in · Role-based access</small></div>
+ </div>
+ <div class="formw"><form class="card" id="lf">
+  <h2>Welcome back</h2><div class="sub">Sign in with your college email or student ID and password.</div>
+  <label>Email or Student ID</label><input id="em" type="text" required autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="you@college.edu or student ID">
+  <label>Password</label><div class="pw"><input id="pw" type="password" required autocomplete="current-password" placeholder="Enter password">
+   <button type="button" id="eye" aria-label="Show password"></button></div>
+  <button class="btn full" id="lb">Sign in</button><div class="err" id="le"></div></form></div>
+</section>
+<div id="toast"></div>
+<script src="js/env.js"></script><script src="js/config.js"></script><script src="js/fx.js"></script><script src="js/login.js"></script></body></html>

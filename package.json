@@ -1,0 +1,8 @@
+{
+  "name": "college-lms",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/make-env.js",
+    "check": "node scripts/check-project.js"
+  }
+}

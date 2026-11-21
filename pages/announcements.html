@@ -1,0 +1,12 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><title>LMS</title></head><body>
+<div id="app"><aside id="side"><nav id="nav"></nav>
+<a href="#" id="out" style="margin-top:18px;background:#ffffff10">⎋ Sign out</a></aside>
+<main><div class="top"><div><button class="btn ghost sm" id="menu">☰</button> <h2 id="ttl"></h2></div><div class="who" id="who"></div></div><div id="view"></div></main></div>
+<div id="toast"></div>
+<script src="../js/fx.js"></script><script src="../js/env.js"></script><script src="../js/config.js"></script><script src="../js/core.js"></script><script src="../js/shell.js"></script><script src="../js/pages/hub.js"></script>
+<script src="../js/pages/crud.js"></script><script src="../js/pages/importer.js"></script>
+<script>boot('notices',()=>crud(P.notices))</script></body></html>

@@ -1,0 +1,11 @@
+# secrets — never commit
+js/env.js
+.env
+.env.*
+!.env.example
+supabase/functions/.env
+supabase/.temp/
+# misc
+node_modules/
+.DS_Store
+*.log
