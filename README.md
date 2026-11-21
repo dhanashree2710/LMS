@@ -4,7 +4,7 @@ One platform for learning and college administration. It is built with HTML, CSS
 
 ## Setup (run in this order)
 
-1. Copy `js/env.example.js` to `js/env.js` and fill in your Supabase URL and **anon** key. `js/env.js` is in `.gitignore`, so it is never pushed to Git (see *Keys and secrets* below).
+1. `js/env.js` already holds your Supabase URL and **anon** key. To use another project, edit it (template: `js/env.example.js`).
 2. In the Supabase **SQL Editor**, run:
    1. `supabase/00_schema.sql`: all tables (safe on an existing database).
    2. `supabase/01_schema_additions.sql`: run this again even if you ran it before. It now adds the `feedback_forms` and `feedback_responses` tables.
@@ -85,13 +85,11 @@ Every new account uses the password `Lms@2026`. The HOD and Super Admin password
 
 | Key | Where it lives | In Git? |
 |---|---|---|
-| Supabase URL + **anon** key | `js/env.js` (local) or generated on the server | No — `js/env.js` is gitignored |
-| **Groq** API key | Supabase Edge Function secret `GROQ_API_KEY` | **Never** — not in any project file |
-| Supabase **service_role** key | Not used by the app. Never put it in the browser | Never |
+| Supabase URL + **anon** key | `js/env.js` | Yes. It is a public key; every visitor's browser receives it anyway |
+| **Groq** API key | Supabase Edge Function secret `GROQ_API_KEY` | **Never.** It is in no project file and never reaches the browser |
+| Supabase **service_role** key | Not used by the app | Never |
 
-- **Local:** copy `js/env.example.js` → `js/env.js`.
-- **Server / Netlify / Vercel / GitHub Actions:** set the environment variables `SUPABASE_URL` and `SUPABASE_ANON_KEY`, and use `npm run build` (runs `node scripts/make-env.js`) as the build command. It writes `js/env.js` at deploy time and refuses a service_role key.
-- The anon key is a *public* client key by design. Anyone who opens the site can read it in the browser. Hiding it from Git keeps the repository clean, but real data protection comes from Row Level Security (see below).
+Deploying needs no setup: push to GitHub and import into Vercel or Netlify, or upload to any web server. The build step (`npm run build`) uses the committed `js/env.js`. If you set `SUPABASE_URL` and `SUPABASE_ANON_KEY` on the host, the build uses those instead. Real data protection comes from Row Level Security (see below), not from hiding the anon key.
 
 ## AI assistant (Groq)
 
