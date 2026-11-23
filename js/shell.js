@@ -66,7 +66,7 @@ function boot(key,fn){
  loadLK();bellInit();
  run(fn);setTimeout(noticeFlash,900)}
 async function run(fn){$('#view').innerHTML=SKEL;
- try{await fn();if(typeof autoCards==='function')autoCards();tilt();loaderDone()}catch(e){loaderDone();$('#view').innerHTML=`<div class="panel err">${esc(e.message||e)}<br><small>If this mentions "permission", "policy" or a missing table/column, run supabase/01_schema_additions.sql in the Supabase SQL editor.</small></div>`}}
+ try{await ensureProfile();await fn();if(typeof autoCards==='function')autoCards();tilt();loaderDone()}catch(e){loaderDone();$('#view').innerHTML=`<div class="panel err">${esc(e.message||e)}<br><small>If this mentions "permission", "policy" or a missing table/column, run supabase/04_cleanup_and_fix.sql in the Supabase SQL editor.</small></div>`}}
 /* subtle 3D tilt on cards */
 function tilt(){if(matchMedia('(pointer:coarse)').matches)return;document.querySelectorAll('.col,.tile,.kpi').forEach(c=>{c.onmousemove=e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(700px) rotateY(${x*8}deg) rotateX(${-y*8}deg) translateY(-5px)`};c.onmouseleave=()=>c.style.transform=''})}
 

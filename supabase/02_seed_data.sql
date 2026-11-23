@@ -702,7 +702,8 @@ insert into public.profiles (id,email,full_name,phone,created_at,updated_at) val
 ('ed943b7f-d136-57f5-8344-e24c22918437','akash.naik@student.atss-lms.in','Akash Naik',null,'2026-07-07 10:00:00+05:30','2026-07-07 10:00:00+05:30'),
 ('45e102c1-64d3-5980-b63d-8d8b4b90f8f7','mrunal.more@student.atss-lms.in','Mrunal More',null,'2026-07-17 10:00:00+05:30','2026-07-17 10:00:00+05:30'),
 ('c162ce3f-a292-5aa0-ad62-296eb033d698','chinmay.deshmukh@student.atss-lms.in','Chinmay Deshmukh',null,'2026-07-12 10:00:00+05:30','2026-07-12 10:00:00+05:30'),
-('f3e3ac73-5e1a-50c5-9743-b1c022e3c7c6','reyansh.gokhale@student.atss-lms.in','Reyansh Gokhale',null,'2026-07-21 10:00:00+05:30','2026-07-21 10:00:00+05:30');
+('f3e3ac73-5e1a-50c5-9743-b1c022e3c7c6','reyansh.gokhale@student.atss-lms.in','Reyansh Gokhale',null,'2026-07-21 10:00:00+05:30','2026-07-21 10:00:00+05:30')
+on conflict (id) do update set email=excluded.email,full_name=excluded.full_name,phone=excluded.phone;
 insert into public.profiles (id,email,full_name,phone,created_at,updated_at) values
 ('409cbb54-ad4e-52b4-88eb-605196f7f5d3','parth.iyer@student.atss-lms.in','Parth Iyer',null,'2026-07-06 10:00:00+05:30','2026-07-06 10:00:00+05:30'),
 ('4f5e444c-2db9-5903-b7dc-16f49b6cecc0','neha.sawant@student.atss-lms.in','Neha Sawant',null,'2026-07-22 10:00:00+05:30','2026-07-22 10:00:00+05:30'),
@@ -903,7 +904,8 @@ insert into public.profiles (id,email,full_name,phone,created_at,updated_at) val
 ('e08a4dc6-f884-5ad8-8e4b-a8946fe42987','ramesh.kulkarni@parents.atss-lms.in','Ramesh Kulkarni','9636022443','2025-07-06 10:00:00+05:30','2025-07-06 10:00:00+05:30'),
 ('c49db43e-4cb4-54bf-ab5a-7edfe356ab98','tukaram.apte@parents.atss-lms.in','Tukaram Apte','9710999757','2025-07-17 10:00:00+05:30','2025-07-17 10:00:00+05:30'),
 ('c69151f6-3d0b-575e-b5b0-4102ee091aa1','jayant.sawant@parents.atss-lms.in','Jayant Sawant','9392027679','2025-07-16 10:00:00+05:30','2025-07-16 10:00:00+05:30'),
-('f627c01f-e3dc-5dab-89b6-d48be2f8c4aa','rajesh.verma@parents.atss-lms.in','Rajesh Verma','9669352967','2025-07-09 10:00:00+05:30','2025-07-09 10:00:00+05:30');
+('f627c01f-e3dc-5dab-89b6-d48be2f8c4aa','rajesh.verma@parents.atss-lms.in','Rajesh Verma','9669352967','2025-07-09 10:00:00+05:30','2025-07-09 10:00:00+05:30')
+on conflict (id) do update set email=excluded.email,full_name=excluded.full_name,phone=excluded.phone;
 
 -- user_roles (400)
 insert into public.user_roles (id,user_id,college_id,role,is_active,created_at) values

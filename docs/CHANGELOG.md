@@ -21,6 +21,16 @@ insert into user_roles(user_id,role) select id,'super_admin' from u;
 ```
 Disable RLS on the tables while testing. Passwords are plain text in `users` (your schema): move to Supabase Auth before production.
 
+## v12 — 23 Nov 2026
+- `04_cleanup_and_fix.sql` fixes the permission errors on exams and at login, creates missing profiles, merges duplicate rows, adds unique indexes, drops 23 unused tables and two duplicate foreign keys.
+- Online exams: a timed MCQ paper on any exam, with auto-submit and one attempt per student. Marks go to exam results.
+- Notices: the order is now Department → Course → Class, and each has an "All" option, so one notice can reach a whole department.
+- Subject allocation: the form order is Department → Course → Class → Semester → Subject, subjects are sorted by course and the academic year fills itself in.
+- Teachers creating a quiz: a typed question is saved even without pressing Add question, and the error messages are clearer.
+- Add forms for materials, assignments, quizzes, exams, timetable and similar pages only list current-year classes, so new records appear under the current year.
+- The app checks the signed-in account on every page and creates a missing profile, which fixes the uploaded_by / teacher_id link errors.
+- Removed the "Powered by Groq" line from the AI panel.
+
 ## v11 — 21 Nov 2026
 - Branded PDF and Excel downloads: college logo, name, address, phone, email and code in the header, the filter context (year, department, course, class, semester), a footer with page numbers and a watermark.
 - Groq AI assistant through the Supabase Edge Function `ai-assistant` (the key is kept in Supabase secrets). Includes "Generate with AI" for quizzes.

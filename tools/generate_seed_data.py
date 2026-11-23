@@ -29,7 +29,8 @@ def emit(t, rows):
     for i in range(0, len(rows), 200):
         chunk = rows[i:i+200]
         OUT.append(f"insert into public.{t} ({','.join(cols)}) values\n" +
-                   ',\n'.join('(' + ','.join(q(r.get(c)) for c in cols) + ')' for r in chunk) + ';')
+                   ',\n'.join('(' + ','.join(q(r.get(c)) for c in cols) + ')' for r in chunk) +
+                   ('\non conflict (id) do update set email=excluded.email,full_name=excluded.full_name,phone=excluded.phone;' if t == 'profiles' else ';'))
 
 PW = 'Lms@2026'
 TODAY = dt.date(2026, 11, 20)

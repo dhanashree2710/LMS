@@ -10,6 +10,7 @@ One platform for learning and college administration. It is built with HTML, CSS
    2. `supabase/01_schema_additions.sql`: run this again even if you ran it before. It now adds the `feedback_forms` and `feedback_responses` tables.
    3. `supabase/02_seed_data.sql`: **reset and load fresh data** (see the warning below). If the editor struggles with the file size, run `supabase/seed_parts/part1…`, then `part2…`, then `part3…` instead.
    4. `supabase/03_linked_delete_rules.sql`: makes edits and deletes update linked tables automatically (safe to run again).
+   5. `supabase/04_cleanup_and_fix.sql`: fixes "permission denied" errors, gives every login a profile, adds the online-exam columns, merges duplicate rows and drops the unused old tables (safe to run again; take a backup first).
 3. Deploy the AI assistant (optional, see *AI assistant (Groq)* below).
 4. Open `index.html` on any static host (Live Server, `npx serve`, Netlify and so on).
 
@@ -110,6 +111,12 @@ supabase functions deploy ai-assistant
 ```
 
 For local testing, copy `supabase/functions/.env.example` to `supabase/functions/.env` (gitignored) and run `supabase functions serve`.
+
+## Online exams
+
+- **Set up:** open **Examinations**, choose an exam in the *Online exams* panel and press **Set up online paper**. Set the start and end time, the duration and the questions. Questions can be typed, uploaded from the template or generated with AI.
+- **Students:** they see the paper in their Examinations tab while the window is open. The timer keeps running if they close the page, the paper submits itself when time is over, and each student can submit only once.
+- **Marks:** the score is saved to the exam marks for verification. Use **View submissions** to see who has submitted, with Excel and PDF downloads.
 
 ## Linked add / edit / delete
 

@@ -16,7 +16,9 @@ async function crud0(c){
  let {data:rows,error}=await q;if(error)throw error;if(c.t==='announcements')rows=await annFilter(rows);window.__rows=rows;window.__refs=refs;
  const canAdd=!['student','parent'].includes(S.role)&&canWrite(c.t)&&!(c.t==='announcements'&&!['college_admin','sub_admin','class_teacher','hod'].includes(S.role)&&0);
 window.__crudCtx={c,cu,refs};
- const inp=f=>fieldHTML(f,refs);
+ const CURY=['study_materials','assignments','quizzes','exams','timetable','attendance','subject_assignments','announcements','fee_structures','feedback_forms','tpo_records'],actY=Object.values(LK.academic_years||{}).find(y=>y.is_active)?.id;
+ const refsAdd=CURY.includes(c.t)&&actY&&refs.class_id?{...refs,class_id:refs.class_id.filter(k=>!k.academic_year_id||k.academic_year_id===actY)}:refs;
+ const inp=f=>fieldHTML(f,refsAdd);
  const inp_old=f=>{const L=f.l||f.k.replace(/_id$/,'').replace(/_/g,' ');let el;
   if(f.ref)el=`<select name="${f.k}" ${f.opt?'':'required'}><option value="">Select…</option>${refs[f.k].map(r=>`<option value="${r.id}" data-p="${r.program_id||''}" data-y="${r.year_number||''}" data-s="${r.semester_id||''}" data-k="${r.class_id||''}" data-d="${r.department_id||LK.programs?.[r.program_id]?.department_id||''}">${esc(nm(f.ref,r))}</option>`).join('')}</select>`;
   else if(f.type==='select')el=`<select name="${f.k}">${f.opts.map(o=>Array.isArray(o)?`<option value="${o[0]}">${o[1]}</option>`:`<option>${o}</option>`).join('')}</select>`;
@@ -26,7 +28,7 @@ window.__crudCtx={c,cu,refs};
   else el=`<input name="${f.k}" type="${f.type||'text'}" ${f.opt?'':'required'} ${f.type==='number'?'step="any"':''}>`;
   return `<div><label>${L}</label>${el}</div>`};
  const show=f=>f.type!=='textarea'&&f.k!=='audience';
- $('#view').innerHTML=`${canAdd?`<div class="panel"><h3 style="margin-bottom:8px">Add ${c.title.toLowerCase()}</h3><form id="cf" class="form">${[...uif,...c.f].filter(f=>!f.h).map(inp).join('')}
+ $('#view').innerHTML=`${canAdd?`<div class="panel"><h3 style="margin-bottom:8px">Add ${c.title.toLowerCase()}</h3><form id="cf" class="form">${cu.f.filter(f=>!f.h).map(inp).join('')}
   ${c.login?`<div><label>Set login password</label><input name="__pw" type="text" minlength="6" placeholder="blank = default password Lms@2026"></div>`:''}
   <div><button class="btn" type="submit">Save</button></div></form></div>`:''}
  <div class="panel"><div class="bar2"><input id="sq" placeholder="Search…">${canAdd?`<button class="btn red sm" id="bd">Delete selected</button>`:''}${canAdd&&!["study_materials","assignments"].includes(c.t)?`<button class="btn ghost sm" id="tp">📄 Template</button><label class="btn ghost sm up" title="Upload an Excel/CSV file, preview the extracted columns, then import">⬆ Upload sheet<input id="up" type="file" accept=".xlsx,.xls,.csv,.tsv,.ods" hidden></label>`:''}${canAdd&&['result_imports','academic_progression'].includes(c.t)?`<label class="btn sm up" title="Extract a university result sheet: match roll numbers and subject codes, calculate PASS / ATKT / FAIL">📊 Import university result<input id="rimp" type="file" accept=".xlsx,.xls,.csv,.ods" hidden></label>`:''}</div>
@@ -79,14 +81,17 @@ window.__crudCtx={c,cu,refs};
 async function crud(cu){
  window.__lastCrud=cu; // so drill Back can restore this page correctly
  const pageY=window.scrollY,navY=document.querySelector('#nav')?.scrollTop||0;
+ try{await (LKP||loadLK())}catch(e){}
  await crud0(cu);
+ if(typeof window.__afterCrud==='function'){try{await window.__afterCrud()}catch(e){console.warn(e)}}
  await explore({...cu,f:cu.f.filter(f=>!f.ui)});
  requestAnimationFrame(()=>{window.scrollTo({top:pageY,behavior:'instant'});const n=document.querySelector('#nav');if(n)n.scrollTop=navY});
 }
 
 /* ---------- shared helpers: form fields, values, edit popup, refresh ---------- */
+const subjSort=a=>[...a].sort((x,y)=>{const px=nm('programs',LK.programs?.[x.program_id]||{})||'',py=nm('programs',LK.programs?.[y.program_id]||{})||'';return px.localeCompare(py)||((LK.semesters?.[x.semester_id]?.semester_number||0)-(LK.semesters?.[y.semester_id]?.semester_number||0))||String(x.name).localeCompare(String(y.name))});
 function fieldHTML(f,refs){const L=f.l||f.k.replace(/_id$/,'').replace(/_/g,' ');let el;
- if(f.ref)el=`<select name="${f.k}" ${f.opt||f.ui?'':'required'}><option value="">Select…</option>${(refs[f.k]||[]).map(r=>`<option value="${r.id}" data-p="${r.program_id||''}" data-y="${r.year_number||LK.classes?.[r.class_id]?.year_number||''}" data-s="${r.semester_id||''}" data-k="${r.class_id||''}" data-d="${r.department_id||LK.programs?.[r.program_id]?.department_id||''}">${esc(nm(f.ref,r))}</option>`).join('')}</select>`;
+ if(f.ref)el=`<select name="${f.k}" ${f.opt||f.ui?'':'required'}><option value="">${f.any||'Select…'}</option>${(f.ref==='subjects'?subjSort(refs[f.k]||[]):(refs[f.k]||[])).map(r=>`<option value="${r.id}" data-p="${r.program_id||''}" data-y="${r.year_number||LK.classes?.[r.class_id]?.year_number||''}" data-s="${r.semester_id||''}" data-k="${r.class_id||''}" data-d="${r.department_id||LK.programs?.[r.program_id]?.department_id||''}">${esc(nm(f.ref,r))}</option>`).join('')}</select>`;
  else if(f.type==='select')el=`<select name="${f.k}">${f.opts.map(o=>Array.isArray(o)?`<option value="${o[0]}">${o[1]}</option>`:`<option>${o}</option>`).join('')}</select>`;
  else if(f.type==='file')el=`<input name="${f.k}" type="file" accept="image/*,.pdf,.doc,.docx,.xlsx,.csv">`;
  else if(f.type==='textarea')el=`<textarea name="${f.k}" rows="2"></textarea>`;
@@ -106,10 +111,10 @@ async function afterSave(c,v){   // a class teacher must actually carry the clas
  if(c.t==='classes'&&v.class_teacher_id){const {data}=await sb.from('user_roles').select('id,role').eq('user_id',v.class_teacher_id).eq('college_id',S.college_id);
   if(data&&!data.some(x=>['class_teacher','hod','principal'].includes(x.role))){const st=data.find(x=>x.role==='subject_teacher');if(st)await sb.from('user_roles').update({role:'class_teacher'}).eq('id',st.id);else await sb.from('user_roles').insert({user_id:v.class_teacher_id,college_id:S.college_id,role:'class_teacher'})}}}
 async function afterWrite(cu){try{LKP=null;await loadLK()}catch(e){}if(cu)await crud(cu)}
-function editModal(c,cu,r,refs){const fs=[...cu.f.filter(f=>f.ui),...c.f].filter(f=>!f.h&&!(c.t==='announcements'&&f.k==='audience'));if(c.login)fs.push({k:'__pw',l:r.user_id?'New login password (leave blank to keep)':'Create login password',opt:1});
+function editModal(c,cu,r,refs){const fs=(cu.f.some(f=>f.ui)?cu.f:[...cu.f.filter(f=>f.ui),...c.f]).filter(f=>!f.h);if(c.login)fs.push({k:'__pw',l:r.user_id?'New login password (leave blank to keep)':'Create login password',opt:1});
  const m=modal(`<h3>Edit ${esc(c.title.replace(/s$/,'').toLowerCase())}</h3><p style="color:var(--mut);font-size:13px;margin:4px 0 12px">Change the values and press Update. The page refreshes automatically.</p><form id="ef" class="form">${fs.map(f=>fieldHTML(f,refs)).join('')}<div style="grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end"><button type="button" class="btn ghost" id="ecx">Cancel</button><button type="submit" class="btn">Update</button></div></form>`,true);
  m.querySelector('.mbox').classList.add('xw');const ef=m.querySelector('#ef'),X=typeof ctxOf==='function'?ctxOf(c,r):{};
- const ctx={department_id:r.department_id||LK.programs?.[X.p]?.department_id||'',program_id:r.program_id||X.p||'',class_id:r.class_id||X.k||'',semester_id:r.semester_id||X.sm||''};
+ const tr=r.target_roles||[],ctx={audience:!tr.length?'':tr.includes('student')&&tr.length===1?'student':tr.includes('parent')&&tr.length===1?'parent':'staff',department_id:r.department_id||LK.programs?.[X.p]?.department_id||'',program_id:r.program_id||X.p||'',class_id:r.class_id||X.k||'',semester_id:r.semester_id||X.sm||''};
  for(const f of fs){const el=ef.elements[f.k];if(!el||f.type==='file')continue;let val=r[f.k]??ctx[f.k]??'';if(f.type==='datetime-local'&&val)val=String(val).slice(0,16);if(f.type==='date'&&val)val=String(val).slice(0,10);if(Array.isArray(val))val=val.join(', ');el.value=val==null?'':String(val)}
  if(typeof cascade==='function')cascade(ef);for(const f of fs){const el=ef.elements[f.k];if(el&&el.tagName==='SELECT'&&(r[f.k]??ctx[f.k]))el.value=r[f.k]??ctx[f.k]}
  m.querySelector('#ecx').onclick=()=>m.remove();

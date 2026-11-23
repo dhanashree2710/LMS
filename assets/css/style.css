@@ -493,3 +493,11 @@ body:has(.mdl) #nflash{display:none}
 .ai-out{margin-top:12px}.ai-txt{background:var(--bg2,#f6f8fb);border:1px solid var(--line,#e3e8ef);border-radius:12px;padding:14px;font-size:14px;line-height:1.6;max-height:52vh;overflow:auto}
 .ai-wait{padding:14px;color:var(--mut);animation:pulse 1.2s infinite}@keyframes pulse{50%{opacity:.45}}
 @media print{#aifab{display:none}}
+/* online exams */
+#oxp .bar2 select{min-width:340px}
+.ox-top{display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;top:-24px;background:var(--card,#fff);padding:6px 0;z-index:2}
+.ox-timer{font:700 22px/1 ui-monospace,monospace;padding:8px 14px;border-radius:10px;background:#eaf6f6;color:#11706f}
+.ox-timer.low{background:#fde8e8;color:#b42318;animation:pulse 1s infinite}
+.ox-q{margin:10px 0}.ox-o{display:flex;gap:8px;align-items:center;padding:7px 10px;border:1px solid var(--line,#e3e8ef);border-radius:9px;margin-top:6px;cursor:pointer;font-weight:400}
+.ox-o:has(input:checked){border-color:#20a6a6;background:#eefafa}
+.oxl{max-height:38vh;overflow:auto}

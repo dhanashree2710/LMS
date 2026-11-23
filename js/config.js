@@ -9,9 +9,10 @@ const cleanMsg=m=>{
  m=String(m??'').trim();
  if(!m)return 'Something went wrong';
  if(/duplicate key|unique constraint|already exists/i.test(m))return 'This record already exists. Please use a different value.';
+ {const fk=m.match(/insert or update on table "(\w+)" violates foreign key constraint "\w+?_(\w+?)_fkey?"/i);if(fk)return 'Linked record not found for "'+fk[2].replace(/_id$/,'').replace(/_/g,' ')+'". Refresh the page and select it again. If it keeps happening, run supabase/04_cleanup_and_fix.sql once.'}
  if(/foreign key|violates foreign key|referenced/i.test(m))return 'Cannot complete: related records still exist. Remove or re-assign them first.';
  if(/null value|not-null|violates not-null/i.test(m))return 'Please fill in all required fields.';
- if(/permission denied|row-level security|rls/i.test(m))return 'You do not have permission to perform this action.';
+ if(/permission denied|row-level security|rls/i.test(m)){const t=(m.match(/table (\w+)/i)||[])[1];return 'Database permission missing'+(t?' on table "'+t+'"':'')+'. The admin must run supabase/04_cleanup_and_fix.sql once in the Supabase SQL editor.'}
  if(/JWT|invalid token|not authenticated/i.test(m))return 'Session expired. Please sign in again.';
  if(/network|fetch|Failed to fetch/i.test(m))return 'Network error. Check your connection and try again.';
  if(/bucket|storage|object not found/i.test(m))return 'File storage error. The file may be missing or the bucket is not set up. Run supabase/01_schema_additions.sql.';
